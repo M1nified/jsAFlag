@@ -1,0 +1,15 @@
+{
+    "compileOnSave":true,
+    "compilerOptions": {
+        "module": "none",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outFile": "main.js",
+        "sourceMap": true
+    },
+    "files": [
+        "ALink.ts",
+        "AFlags.ts"
+    ]
+}
