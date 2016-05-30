@@ -1,0 +1,38 @@
+{
+  "name": "aflag",
+  "version": "0.1.0",
+  "description": "Manage a href links in string.",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M1nified/jsAFlag.git"
+  },
+  "keywords": [
+    "a",
+    "href",
+    "link",
+    "html",
+    "js",
+    "get",
+    "hash"
+  ],
+  "author": "M1nified",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M1nified/jsAFlag/issues"
+  },
+  "homepage": "https://github.com/M1nified/jsAFlag#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-typescript": "^0.8.0",
+    "jasmine": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2"
+  }
+}

@@ -1,90 +1,6 @@
 "use strict";
-var ALink = (function () {
-    function ALink(link) {
-        this._flags = {};
-        this._hash = "";
-        this._flags = ALink.parseFlags(link);
-        this._hash = ALink.parseHash(link);
-        this._domain = ALink.parseDomain(link);
-        this._path = ALink.parsePath(link);
-    }
-    ALink.parseFlags = function (link) {
-        var cf = link.match(ALink.rx_get);
-        if (!cf || cf.length === 0)
-            return {};
-        var cflags = {};
-        cf.forEach(function (val, i, arr) {
-            var split = val.split("=");
-            cflags[split[0]] = split[1];
-        });
-        return cflags;
-    };
-    ALink.parseHash = function (link) {
-        var hasharr = link.match(ALink.rx_hash);
-        if (!hasharr || hasharr.length === 0)
-            return null;
-        var hash = hasharr[0];
-        return hash.slice(1);
-    };
-    ALink.parseDomain = function (link) {
-        var http = ALink.rx_http.exec(link);
-        http = http && http.length > 0 ? http[0] : "";
-        var dom = link.slice(http.length);
-        dom = dom.split(/\/|\\|\?|#/, 1);
-        dom = dom && dom.length > 0 ? dom[0] : "";
-        return http + dom;
-    };
-    ALink.parsePath = function (link, domain) {
-        if (domain === void 0) { domain = null; }
-        if (!domain) {
-            domain = ALink.parseDomain(link);
-        }
-        var cl = link.replace(domain, '').replace('\\', '/');
-        var patharr = cl.match(ALink.rx_path);
-        if (!patharr || patharr.length === 0)
-            return null;
-        var path = patharr[0];
-        return path;
-    };
-    ALink.prototype.toString = function () {
-        return this._domain + this.pathToString() + this.flagsToString() + this.hashToString();
-    };
-    ALink.prototype.flagsToString = function () {
-        var keys = Object.keys(this._flags);
-        if (keys.length == 0)
-            return "";
-        var elems = [];
-        for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-            var key = keys_1[_i];
-            elems.push(key + "=" + this._flags[key]);
-        }
-        var str = elems.join("&");
-        return "?" + str;
-    };
-    ALink.prototype.hashToString = function () {
-        return this._hash && this._hash !== "" ? "#" + this._hash : "";
-    };
-    ALink.prototype.pathToString = function () {
-        return (this._path || '');
-    };
-    ALink.prototype.setFlags = function (flags) {
-        var keys = Object.keys(flags);
-        for (var _i = 0, keys_2 = keys; _i < keys_2.length; _i++) {
-            var key = keys_2[_i];
-            this._flags[key] = flags[key];
-        }
-        return this;
-    };
-    ALink.rx_get = /\w*=\w*/g;
-    ALink.rx_hash = /#[\w-]*/g;
-    ALink.rx_http = /^\w*:\/\//;
-    ALink.rx_path = /\/[^\?#]*/;
-    return ALink;
-}());
-"use strict";
-var AFlags = (function () {
-    function AFlags(context, pattern) {
-        if (pattern === void 0) { pattern = null; }
+class AFlags {
+    constructor(context, pattern = null) {
         this._context = null;
         this._pattern = null;
         this._context = context;
@@ -92,14 +8,13 @@ var AFlags = (function () {
             this._pattern = new RegExp(pattern);
         }
     }
-    AFlags.prototype.setFlags = function (flags) {
-        var _this = this;
-        this._context = this._context.replace(AFlags.rx_a, function (link) {
-            var nl = link.replace(AFlags.rx_href, function (href) {
-                var nh = href.slice(6, href.length - 1);
-                if (_this._pattern && !_this._pattern.test(nh))
+    setFlags(flags) {
+        this._context = this._context.replace(AFlags.rx_a, (link) => {
+            let nl = link.replace(AFlags.rx_href, (href) => {
+                let nh = href.slice(6, href.length - 1);
+                if (this._pattern && !this._pattern.test(nh))
                     return href;
-                var link = new ALink(nh);
+                let link = new ALink(nh);
                 nh = link.setFlags(flags).toString();
                 nh = "href=\"" + nh + "\"";
                 return nh;
@@ -107,12 +22,90 @@ var AFlags = (function () {
             return nl;
         });
         return this;
-    };
-    AFlags.prototype.getContext = function () {
+    }
+    getContext() {
         return this._context;
-    };
-    AFlags.rx_a = /<a[^>]*>/g;
-    AFlags.rx_href = /href=("|')[^"']*("|')/g;
-    return AFlags;
-}());
+    }
+}
+AFlags.rx_a = /<a[^>]*>/g;
+AFlags.rx_href = /href=("|')[^"']*("|')/g;
+"use strict";
+class ALink {
+    constructor(link) {
+        this._flags = {};
+        this._hash = "";
+        this._flags = ALink.parseFlags(link);
+        this._hash = ALink.parseHash(link);
+        this._domain = ALink.parseDomain(link);
+        this._path = ALink.parsePath(link);
+    }
+    static parseFlags(link) {
+        let cf = link.match(ALink.rx_get);
+        if (!cf || cf.length === 0)
+            return {};
+        let cflags = {};
+        cf.forEach((val, i, arr) => {
+            let split = val.split("=");
+            cflags[split[0]] = split[1];
+        });
+        return cflags;
+    }
+    static parseHash(link) {
+        let hasharr = link.match(ALink.rx_hash);
+        if (!hasharr || hasharr.length === 0)
+            return null;
+        let hash = hasharr[0];
+        return hash.slice(1);
+    }
+    static parseDomain(link) {
+        let http = ALink.rx_http.exec(link);
+        http = http && http.length > 0 ? http[0] : "";
+        let dom = link.slice(http.length);
+        dom = dom.split(/\/|\\|\?|#/, 1);
+        dom = dom && dom.length > 0 ? dom[0] : "";
+        return http + dom;
+    }
+    static parsePath(link, domain = null) {
+        if (!domain) {
+            domain = ALink.parseDomain(link);
+        }
+        let cl = link.replace(domain, '').replace('\\', '/');
+        let patharr = cl.match(ALink.rx_path);
+        if (!patharr || patharr.length === 0)
+            return null;
+        let path = patharr[0];
+        return path;
+    }
+    toString() {
+        return this._domain + this.pathToString() + this.flagsToString() + this.hashToString();
+    }
+    flagsToString() {
+        let keys = Object.keys(this._flags);
+        if (keys.length == 0)
+            return "";
+        let elems = [];
+        for (let key of keys) {
+            elems.push(key + "=" + this._flags[key]);
+        }
+        let str = elems.join("&");
+        return "?" + str;
+    }
+    hashToString() {
+        return this._hash && this._hash !== "" ? "#" + this._hash : "";
+    }
+    pathToString() {
+        return (this._path || '');
+    }
+    setFlags(flags) {
+        let keys = Object.keys(flags);
+        for (let key of keys) {
+            this._flags[key] = flags[key];
+        }
+        return this;
+    }
+}
+ALink.rx_get = /\w*=\w*/g;
+ALink.rx_hash = /#[\w-]*/g;
+ALink.rx_http = /^\w*:\/\//;
+ALink.rx_path = /\/[^\?#]*/;
 //# sourceMappingURL=jsAFlag.js.map

@@ -15,8 +15,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '../bin/jsAFlag.js',
-      './*Test.js'
+      'bin/jsAFlag.js',
+      'tests/*Test.js'
     ],
 
 

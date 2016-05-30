@@ -5,11 +5,11 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "../bin/jsAFlag.js",
+        "outFile": "bin/jsAFlag.js",
         "sourceMap": true
     },
     "files": [
-        "ALink.ts",
-        "AFlags.ts"
+        "src/ALink.ts",
+        "src/AFlags.ts"
     ]
 }
