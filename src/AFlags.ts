@@ -1,5 +1,4 @@
 "use strict";
-// import * as ALink from "ALink"
 class AFlags {
     private _context:string = null;
     private _pattern:RegExp = null;
@@ -32,9 +31,3 @@ class AFlags {
         return this._context;
     }
 }
-
-// try{
-//     module.exports = AFlags;
-// }catch(e){
-//     //this is not a node.js server
-// }

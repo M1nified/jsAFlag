@@ -13,6 +13,21 @@ module.exports = function(grunt){
                     removeComments:true,
                     declaration:true,
                 }
+            },
+            watch:{
+                generateTsConfig:true,
+                src:['src/*.ts'],
+                dest:'bin/jsAFlag.js',
+                options:{
+                    module:'none',
+                    target:'es6',
+                    sourceMap:true,
+                    removeComments:true,
+                    declaration:true,
+                    watch:{
+                        atBegin:true
+                    }
+                }
             }
         }
     })
@@ -20,5 +35,6 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-typescript');
     
     grunt.registerTask('build-class',['typescript:class']);
-    grunt.registerTask('default',['build-class']);
+    grunt.registerTask('build-watch',['typescript:watch']);
+    grunt.registerTask('default',['build-watch']);
 }
