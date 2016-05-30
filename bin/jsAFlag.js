@@ -6,6 +6,7 @@ var ALink = (function () {
         this._flags = ALink.parseFlags(link);
         this._hash = ALink.parseHash(link);
         this._domain = ALink.parseDomain(link);
+        this._path = ALink.parsePath(link);
     }
     ALink.parseFlags = function (link) {
         var cf = link.match(ALink.rx_get);
@@ -33,8 +34,20 @@ var ALink = (function () {
         dom = dom && dom.length > 0 ? dom[0] : "";
         return http + dom;
     };
+    ALink.parsePath = function (link, domain) {
+        if (domain === void 0) { domain = null; }
+        if (!domain) {
+            domain = ALink.parseDomain(link);
+        }
+        var cl = link.replace(domain, '').replace('\\', '/');
+        var patharr = cl.match(ALink.rx_path);
+        if (!patharr || patharr.length === 0)
+            return null;
+        var path = patharr[0];
+        return path;
+    };
     ALink.prototype.toString = function () {
-        return this._domain + this.flagsToString() + this.hashToString();
+        return this._domain + this.pathToString() + this.flagsToString() + this.hashToString();
     };
     ALink.prototype.flagsToString = function () {
         var keys = Object.keys(this._flags);
@@ -51,6 +64,9 @@ var ALink = (function () {
     ALink.prototype.hashToString = function () {
         return this._hash && this._hash !== "" ? "#" + this._hash : "";
     };
+    ALink.prototype.pathToString = function () {
+        return (this._path || '');
+    };
     ALink.prototype.setFlags = function (flags) {
         var keys = Object.keys(flags);
         for (var _i = 0, keys_2 = keys; _i < keys_2.length; _i++) {
@@ -62,6 +78,7 @@ var ALink = (function () {
     ALink.rx_get = /\w*=\w*/g;
     ALink.rx_hash = /#[\w-]*/g;
     ALink.rx_http = /^\w*:\/\//;
+    ALink.rx_path = /\/[^\?#]*/;
     return ALink;
 }());
 "use strict";
@@ -89,9 +106,13 @@ var AFlags = (function () {
             });
             return nl;
         });
+        return this;
+    };
+    AFlags.prototype.getContext = function () {
+        return this._context;
     };
     AFlags.rx_a = /<a[^>]*>/g;
     AFlags.rx_href = /href=("|')[^"']*("|')/g;
     return AFlags;
 }());
-//# sourceMappingURL=main.js.map
+//# sourceMappingURL=jsAFlag.js.map

@@ -2,6 +2,7 @@
 let l1 = "http://www.google.pl?f1=f1v&f2=f2v#sth";
 let l2 = "/cos?f=1&f2=#hash";
 let l3 = "http://www.statsoft.pl#hash"
+let l4 = "http://www.statsoft.pl/cos/dalej?file=1#go"
 describe("public static parseFlags ",function(){
     it('should parse flags',()=>{
         expect(ALink.parseFlags(l1)).toEqual({
@@ -28,11 +29,18 @@ describe("public static parseDomain",()=>{
         expect(ALink.parseDomain(l3)).toBe("http://www.statsoft.pl");
     })
 })
+describe("public static parsePath",()=>{
+    it('should parse path',()=>{
+        expect(ALink.parsePath(l2)).toBe("/cos");
+        expect(ALink.parsePath(l4)).toBe("/cos/dalej");
+    })
+})
 
 describe("ALink object",function() {
-    let alink1;
+    let alink1,alink4;
     beforeEach(()=>{
         alink1 = new ALink(l1);
+        alink4 = new ALink(l4);
     })
     
     describe("public static setFlags",()=>{
@@ -45,6 +53,16 @@ describe("ALink object",function() {
                 nf1:'nf1v'
             })
             expect(alink1.toString()).toBe("http://www.google.pl?f1=f1v&f2=f2v&nf1=nf1v#sth");
+        })
+        it('should set given flag and keep path',()=>{
+            alink4.setFlags({
+                nf1:'nf1v'
+            })
+            expect(alink4._flags).toEqual({
+                file:'1',
+                nf1:'nf1v'
+            })
+            expect(alink4.toString()).toBe("http://www.statsoft.pl/cos/dalej?file=1&nf1=nf1v#go")
         })
     })
 })

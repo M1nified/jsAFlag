@@ -9,13 +9,16 @@ class ALink {
     public static rx_get = /\w*=\w*/g;
     public static rx_hash = /#[\w-]*/g;
     public static rx_http = /^\w*:\/\//;
+    public static rx_path = /\/[^\?#]*/;
     private _domain:string;
+    private _path:string;
     private _flags:IFlag = {};
     private _hash:string = "";
     constructor(link:string) {
         this._flags = ALink.parseFlags(link);
         this._hash = ALink.parseHash(link);
         this._domain = ALink.parseDomain(link);
+        this._path = ALink.parsePath(link);
     }
     
     public static parseFlags(link:string):IFlag{
@@ -42,9 +45,19 @@ class ALink {
         dom = dom && dom.length>0 ? dom[0] : "";
         return http + dom;
     }
+    public static parsePath(link:string,domain:string=null):string{
+        if(!domain){
+            domain = ALink.parseDomain(link);
+        }
+        let cl = link.replace(domain,'').replace('\\','/');
+        let patharr:any[] = cl.match(ALink.rx_path);
+        if(!patharr || patharr.length === 0) return null;
+        let path:string = patharr[0];
+        return path;
+    }
     
     public toString():string{
-        return this._domain+this.flagsToString()+this.hashToString();
+        return this._domain+this.pathToString()+this.flagsToString()+this.hashToString();
     }
     public flagsToString():string{
         let keys = Object.keys(this._flags);
@@ -56,8 +69,11 @@ class ALink {
         let str = elems.join("&");
         return "?"+str;
     }
-    public hashToString(){
+    public hashToString():string{
         return this._hash && this._hash !== "" ? "#"+this._hash : "";
+    }
+    public pathToString():string{
+        return (this._path||'');
     }
     public setFlags(flags:IFlag):ALink{
         let keys = Object.keys(flags);

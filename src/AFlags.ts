@@ -11,7 +11,7 @@ class AFlags {
             this._pattern = new RegExp(pattern);
         }
     }
-    public setFlags(flags:IFlag):void {
+    public setFlags(flags:IFlag):AFlags {
         this._context = this._context.replace(AFlags.rx_a,(link)=>{
             // console.log(link);
             let nl = link.replace(AFlags.rx_href,(href)=>{
@@ -26,6 +26,10 @@ class AFlags {
             //console.log(nl);
             return nl;
         });
+        return this;
+    }
+    public getContext():string{
+        return this._context;
     }
 }
 
