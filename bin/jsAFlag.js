@@ -104,7 +104,7 @@ class ALink {
         return this;
     }
 }
-ALink.rx_get = /\w*=\w*/g;
+ALink.rx_get = /\w*=[^&#=]*/g;
 ALink.rx_hash = /#[\w-]*/g;
 ALink.rx_http = /^\w*:\/\//;
 ALink.rx_path = /\/[^\?#]*/;

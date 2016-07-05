@@ -12,7 +12,14 @@ describe("public static parseFlags ",function(){
         expect(ALink.parseFlags(l2)).toEqual({
             f:'1',
             f2:''
-        })
+        });
+        expect(ALink.parseFlags("http://www.statsoft.pl/tr.php?tar=http://www.google.pl&a=1")).toEqual({
+            tar:'http://www.google.pl',
+            a:'1'
+        });
+        expect(ALink.parseFlags("http://www.google.pl?a1=2")).toEqual({
+            a1:'2'
+        });
     })
 })
 describe("public static parseHash",()=>{

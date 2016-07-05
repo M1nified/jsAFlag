@@ -6,7 +6,7 @@ interface IFlag{
     [index:string]:string
 }
 class ALink {
-    public static rx_get = /\w*=\w*/g;
+    public static rx_get = /\w*=[^&#=]*/g;
     public static rx_hash = /#[\w-]*/g;
     public static rx_http = /^\w*:\/\//;
     public static rx_path = /\/[^\?#]*/;
