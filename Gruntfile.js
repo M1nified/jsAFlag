@@ -5,7 +5,19 @@ module.exports = function(grunt){
             class:{
                 generateTsConfig:true,
                 src:['src/*.ts'],
-                dest:'bin/jsAFlag.js',
+                dest:'bin/browser/jsAFlag.js',
+                options:{
+                    module:'none',
+                    target:'es6',
+                    sourceMap:true,
+                    removeComments:true,
+                    declaration:true,
+                }
+            },
+            npm:{
+                generateTsConfig:true,
+                src:['src/*.ts','src/npm/exports.ts'],
+                dest:'bin/npm/AHref.js',
                 options:{
                     module:'none',
                     target:'es6',
@@ -17,7 +29,7 @@ module.exports = function(grunt){
             watch:{
                 generateTsConfig:true,
                 src:['src/*.ts'],
-                dest:'bin/jsAFlag.js',
+                dest:'bin/browser/jsAFlag.js',
                 options:{
                     module:'none',
                     target:'es6',
@@ -28,13 +40,48 @@ module.exports = function(grunt){
                         atBegin:true
                     }
                 }
+            },
+            npm_pkg:{
+                generateTsConfig:true,
+                src:['src/*.ts','src/npm/exports.ts'],
+                dest:'build_npm/index.js',
+                options:{
+                    module:'none',
+                    target:'es6',
+                    sourceMap:false,
+                    removeComments:true,
+                    declaration:false,
+                }
+            }
+        },
+        copy:{
+            npm_pkg:{
+                files:[
+                    {
+                        expand:true,
+                        src:['package.json'],
+                        flatten:true,
+                        dest:'build_npm/'
+                    },
+                    {
+                        expand:true,
+                        src:['tests/mocha/test.js'],
+                        flatten:true,
+                        dest:'build_npm/'
+                    }
+                ]
             }
         }
     })
     
     grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     
     grunt.registerTask('build-class',['typescript:class']);
+    grunt.registerTask('build-npm',['typescript:npm']);
     grunt.registerTask('build-watch',['typescript:watch']);
+
+    grunt.registerTask('npm_pkg',['typescript:npm_pkg','copy:npm_pkg']);
+
     grunt.registerTask('default',['build-watch']);
 }

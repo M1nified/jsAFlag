@@ -10,6 +10,7 @@
     },
     "files": [
         "src/ALink.ts",
-        "src/AFlags.ts"
+        "src/AFlags.ts",
+        "src/npm/exports.ts"
     ]
 }

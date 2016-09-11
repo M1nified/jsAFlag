@@ -5,8 +5,9 @@
   "directories": {
     "test": "tests"
   },
+  "main":"index.js",
   "scripts": {
-    "test": "karma start"
+    "test": "mocha tests/mocha/test.js"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,12 @@
   "homepage": "https://github.com/M1nified/jsAFlag#readme",
   "devDependencies": {
     "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-typescript": "^0.8.0",
     "jasmine": "^2.4.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
-    "karma-jasmine": "^1.0.2"
+    "karma-jasmine": "^1.0.2",
+    "mocha": "^3.0.2"
   }
 }
